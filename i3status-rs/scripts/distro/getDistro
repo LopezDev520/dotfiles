@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Define los códigos de los iconos de Nerd Fonts para cada distribución
+declare -A distro_icons=(
+    ["ubuntu"]=""
+    ["fedora"]=""
+    ["debian"]=""
+    ["arch"]=""
+    ["gentoo"]=""
+    ["centos"]=""
+)
+
+# Icono de Linux
+linux_icon=""
+
+# Comprueba si el archivo "/etc/os-release" existe
+if [ -f /etc/os-release ]; then
+    # Lee el archivo "/etc/os-release" y extrae el valor de la variable "NAME"
+    distro=$(awk -F= '/^NAME/{print $2}' /etc/os-release)
+    # Elimina las comillas dobles alrededor del nombre de la distribución
+    distro="${distro%\"}"
+    distro="${distro#\"}"
+    
+    # Comprueba si el archivo "/etc/os-release" contiene la variable "ID_LIKE"
+    if grep -q "ID_LIKE" /etc/os-release; then
+        # Lee el archivo "/etc/os-release" y extrae el valor de la variable "ID_LIKE"
+        base_distro=$(awk -F= '/^ID_LIKE/{print $2}' /etc/os-release)
+        # Elimina las comillas dobles alrededor del nombre de la distribución base
+        base_distro="${base_distro%\"}"
+        base_distro="${base_distro#\"}"
+        
+        # Comprueba si la distribución base tiene un icono de Nerd Fonts asociado
+        if [ ${distro_icons[$base_distro]+_} ]; then
+            base_icon=${distro_icons[$base_distro]}
+            echo "$base_icon"
+        else
+            echo "$linux_icon"
+        fi
+    else
+        echo "No se pudo determinar la distribución base."
+    fi
+else
+    echo "No se pudo determinar la distribución de Linux."
+fi

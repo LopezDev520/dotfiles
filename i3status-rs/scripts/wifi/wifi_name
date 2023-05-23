@@ -1,0 +1,11 @@
+#!/bin/bash
+
+interface="wlp0s20f0u1u3"  # Cambia "wlan0" por el nombre de tu interfaz de red WiFi
+
+connected=$(iwconfig $interface | awk -F '"' '/ESSID/ {print $2}')
+
+if [ -z "$connected" ]; then
+  echo "󰖪"
+else
+  echo " $connected"
+fi

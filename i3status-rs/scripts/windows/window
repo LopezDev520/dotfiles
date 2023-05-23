@@ -1,0 +1,10 @@
+#!/bin/bash
+
+active_window=$(xdotool getwindowfocus getwindowname | cut -c 1-40)
+if [[ $active_window -eq "i3" ]]; then
+  echo " No Window"
+elif [[ ${#active_window} -gt 29 ]]; then
+  active_window+="..."
+  echo "$active_window"
+fi
+
